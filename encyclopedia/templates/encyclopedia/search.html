@@ -1,0 +1,43 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Search - Encyclopedia
+{% endblock %}
+
+{% block body %}
+    <h1>Search</h1>
+
+    <form action="{% url 'search' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Page Title:</label>
+            {{ search }}
+            {% if title != None %}
+                <div id="contentHelp" class="form-text text-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                    </svg>
+                    {{ title }} does not exist
+                </div>
+            {% endif %}
+        </div>
+        {% if matches %}
+            <div class="mb-3">
+                <label class="form-label">Similar Results:</label>
+                <div class="list-group list-group-flush list-group-small">
+                    {% for entry in matches %}
+                        <a href="{% url 'entry' title=entry %}" class="list-group-item list-group-item-action d-flex">
+                            <div class="entry-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                                </svg>
+                            </div>
+                            {{ entry }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+{% endblock %}

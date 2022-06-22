@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="row">
+            <div class="sidebar col-lg-2 col-md-3">
+                <h2>Wiki</h2>
+                {% if request.path != '/search' %}
+                    <div class="section">
+                        <form action="{% url 'search' %}" method="post">
+                            {% csrf_token %}
+                            {{ search }}
+                        </form>
+                    </div>
+                {% endif %}
+                <nav class="nav d-grid gap-2 section">
+                    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm">Home</a>
+                    <a href="{% url 'create' %}" class="btn btn-outline-secondary btn-sm">Create New Page</a>
+                    <a href="{% url 'random' %}" class="btn btn-outline-secondary btn-sm">Random Page</a>
+                </nav>
+                {% if request.path != '/' %}
+                    <nav class="nav d-grid gap-2 section">
+                        <div>All Pages</div>
+                
+                        {% for entry in entries %}
+                            <a href="{% url 'entry' title=entry %}" class="btn btn-outline-secondary btn-sm">{{ entry }}</a>
+                        {% endfor %}
+                    </nav>
+                {% endif %}
+            </div>
+            <div class="main col-lg-10 col-md-9">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </div>
+
+    </body>
+</html>
